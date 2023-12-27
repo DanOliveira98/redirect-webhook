@@ -1,6 +1,6 @@
 <?php
 
-namespace src;
+namespace GamesPackage;
 
 use Closure;
 use GuzzleHttp\Client;

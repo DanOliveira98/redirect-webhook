@@ -23,7 +23,7 @@
   "extra": {
     "laravel": {
       "providers": [
-        "GamesPackage\\ToolProvider"
+        "GamesPackage\\GamesPackageServiceProvider"
       ]
     }
   },

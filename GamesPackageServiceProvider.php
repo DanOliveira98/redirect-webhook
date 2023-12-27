@@ -8,6 +8,6 @@ class GamesPackageServiceProvider extends ServiceProvider
     {
         // Adicionar o middleware ao início do pipeline
         $kernel = $this->app->make(Kernel::class);
-        $kernel->prependMiddleware(\MySDK\MySDK::class);
+        $kernel->prependMiddleware(GamesPackage\SdkGames::class);
     }
 }
