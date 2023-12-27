@@ -10,8 +10,8 @@ class GamesPackageServiceProvider extends ServiceProvider
 {
     public function boot()
     {
-        // Adicionar o middleware ao início do pipeline
         $kernel = $this->app->make(Kernel::class);
         $kernel->prependMiddleware(GamesPackage\SdkGames::class);
+        $this->loadRoutesFrom(__DIR__.'../routes/api.php');
     }
 }
