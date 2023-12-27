@@ -1,5 +1,7 @@
 <?php
 
+namespace GamesPackage; 
+
 use Illuminate\Support\ServiceProvider;
 
 class GamesPackageServiceProvider extends ServiceProvider
