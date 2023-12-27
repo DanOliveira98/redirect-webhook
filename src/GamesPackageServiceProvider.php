@@ -1,8 +1,10 @@
 <?php
 
-namespace GamesPackage; 
+namespace GamesPackage;
 
+use GamesPackage;
 use Illuminate\Support\ServiceProvider;
+use Kernel;
 
 class GamesPackageServiceProvider extends ServiceProvider
 {
