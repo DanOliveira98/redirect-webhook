@@ -4,7 +4,7 @@ namespace GamesPackage;
 
 use GamesPackage;
 use Illuminate\Support\ServiceProvider;
-use Kernel;
+use Illuminate\Contracts\Http\Kernel;
 
 class GamesPackageServiceProvider extends ServiceProvider
 {
