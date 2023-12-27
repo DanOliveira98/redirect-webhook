@@ -4,7 +4,7 @@ namespace GamesPackage\Controllers;
 
 use GamesPackage\Services\Pg;
 use GamesPackage\Services\Pragmatic;
-use GuzzleHttp\Psr7\Request;
+use Illuminate\Http\Request;
 
 class CreateGameController
 {
