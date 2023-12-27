@@ -26,7 +26,7 @@ class SdkGames
         foreach ($camposParaVerificar as $campo) {
             if (
                 $campo === "salsa"
-                && $this->checkSalsa($request)
+                && $request->getContent() !== ""
             ) {
                 return true;
             }
@@ -70,25 +70,17 @@ class SdkGames
 
     protected function redirectToAnotherServer($request)
     {
-        $sites = config('enable_site');
-
+        $sites = $this->sites();
         foreach ($sites as $key => $site) {
-            if ($key === $this->site) {
-                $novoHost = 'http://novo-servidor';
-                $novoEndpoint = $request->getPathInfo();
+            try {
+                if ($key === $this->site) {
+                    $novoHost = $site;
+                    $novoEndpoint = $request->getPathInfo();
 
-                $novaUrl = rtrim($novoHost, '/') . $novoEndpoint;
+                    $novaUrl = rtrim($novoHost, '/') . $novoEndpoint;
 
-                $client = new Client();
+                    $client = new Client();
 
-                if ($request->isXml()) {
-                    $novaRequisicao = [
-                        'method' => $request->getMethod(),
-                        'uri' => $novaUrl,
-                        'headers' => $request->headers->all(),
-                        'body' => $request->getContent(),
-                    ];
-                } else {
                     $novaRequisicao = [
                         'method' => $request->getMethod(),
                         'uri' => $novaUrl,
@@ -96,20 +88,28 @@ class SdkGames
                         'body' => $request->getContent(),
                         'form_params' => $request->request->all(),
                     ];
+
+                    $response = $client->request(
+                        $novaRequisicao['method'],
+                        $novaRequisicao['uri'],
+                        [
+                            'headers' => $novaRequisicao['headers'],
+                            'body' => $novaRequisicao['body'],
+                            'form_params' => $novaRequisicao['form_params'],
+                        ]
+                    );
+                    return response($response->getBody()->getContents(), $response->getStatusCode());
                 }
-
-                $response = $client->request(
-                    $novaRequisicao['method'],
-                    $novaRequisicao['uri'],
-                    [
-                        'headers' => $novaRequisicao['headers'],
-                        'body' => $novaRequisicao['body'],
-                        'form_params' => $novaRequisicao['form_params'],
-                    ]
-                );
-
-                return response($response->getBody()->getContents(), $response->getStatusCode());
+            } catch (\Throwable $exception) {
+                dd($exception);
             }
         }
+    }
+
+    public function sites()
+    {
+        return [
+            "localhost" => "localhost:8001"
+        ];
     }
 }
