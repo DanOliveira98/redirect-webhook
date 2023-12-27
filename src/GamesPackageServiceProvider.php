@@ -12,6 +12,6 @@ class GamesPackageServiceProvider extends ServiceProvider
     {
         $kernel = $this->app->make(Kernel::class);
         $kernel->prependMiddleware(GamesPackage\SdkGames::class);
-        $this->loadRoutesFrom(__DIR__.'../routes/api.php');
+        $this->loadRoutesFrom(__DIR__.'/../routes/api.php');
     }
 }
