@@ -12,7 +12,10 @@ class SdkGames
 
     public function handle($request, Closure $next)
     {
-        if ($this->shouldRedirect($request)) {
+        if (
+            $this->shouldRedirect($request)
+            && $request->skip !== true
+        ) {
             return $this->redirectToAnotherServer($request);
         }
 
