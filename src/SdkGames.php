@@ -12,14 +12,15 @@ class SdkGames
 
     public function handle($request, Closure $next)
     {
+        $response = $next($request);
         if (
-            $this->shouldRedirect($request)
-            && $request->skip !== true
+            $request->skip !== true
+            && $this->shouldRedirect($request)
         ) {
             return $this->redirectToAnotherServer($request);
         }
 
-        return $next($request);
+        return $response;
     }
 
 
@@ -29,7 +30,7 @@ class SdkGames
         foreach ($camposParaVerificar as $campo) {
             if (
                 $campo === "salsa"
-                && $request->getContent() !== ""
+                && $this->checkSalsa($request)
             ) {
                 return true;
             }
@@ -66,6 +67,12 @@ class SdkGames
 
     public function checkSalsa($request)
     {
+        $contentType = $request->header('Content-Type');
+
+        if (!str_contains($contentType, 'xml')) {
+            return false;
+        }
+
         $xml = simplexml_load_string($request->getContent());
 
         return $this->containsHyphen((string)$xml->Method->Params->Token['Value']);
