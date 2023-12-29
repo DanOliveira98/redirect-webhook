@@ -5,7 +5,6 @@ namespace GamesPackage\Services;
 use GamesPackage\Contracts\CassinoInterface;
 use GuzzleHttp\Client;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Log;
 
 class Pragmatic implements CassinoInterface
 {
@@ -23,7 +22,7 @@ class Pragmatic implements CassinoInterface
             "currency" => "BRL",
             "platform" => "WEB",
             "technology" => "H5",
-            "token" => $request->userId,
+            "token" => $request->key . "#" . $request->userId,
             "stylename" => $secure,
             "cashierUrl" => $domain,
             "lobbyUrl" => $domain,
@@ -62,7 +61,6 @@ class Pragmatic implements CassinoInterface
 
         $response = json_decode($response->getBody());
 
-
-        return $response->gameURL;
+        return response()->json(["url" => $response->gameURL]);
     }
 }
