@@ -119,7 +119,8 @@ class SdkGames
     public function sites()
     {
         return [
-            "localhost" => "localhost:8001"
+            "localhost" => "localhost:8001",
+            "leoapg" => "https://leoapg.com"
         ];
     }
 }

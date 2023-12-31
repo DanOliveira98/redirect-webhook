@@ -25,7 +25,7 @@ class Pg implements CassinoInterface
         $trace = (string)Str::uuid();
         try {
             $extraArgs = http_build_query([
-                "ops" => urlencode($request->userId),
+                "ops" => $request->key . "#" . $request->userId,
                 "btt" => 1,
             ]);
 
@@ -42,7 +42,7 @@ class Pg implements CassinoInterface
                     ]
                 ]
             );
-            return $response->getBody()->getContents();
+            return $response->getBody();
         } catch (\GuzzleHttp\Exception\ClientException $exception) {
             echo "erro ao abrir jogo";
         }
