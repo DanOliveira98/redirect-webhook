@@ -80,47 +80,34 @@ class SdkGames
 
     protected function redirectToAnotherServer($request)
     {
-        $sites = $this->sites();
-        foreach ($sites as $key => $site) {
-            try {
-                if ($key === $this->site) {
-                    $novoHost = $site;
-                    $novoEndpoint = $request->getPathInfo();
+        try {
+            $novoHost = $this->site;
+            $novoEndpoint = $request->getPathInfo();
 
-                    $novaUrl = rtrim($novoHost, '/') . $novoEndpoint;
+            $novaUrl = rtrim($novoHost, '/') . $novoEndpoint;
 
-                    $client = new Client();
+            $client = new Client();
 
-                    $novaRequisicao = [
-                        'method' => $request->getMethod(),
-                        'uri' => $novaUrl,
-                        'headers' => $request->headers->all(),
-                        'body' => $request->getContent(),
-                        'form_params' => $request->request->all(),
-                    ];
+            $novaRequisicao = [
+                'method' => $request->getMethod(),
+                'uri' => $novaUrl,
+                'headers' => $request->headers->all(),
+                'body' => $request->getContent(),
+                'form_params' => $request->request->all(),
+            ];
 
-                    $response = $client->request(
-                        $novaRequisicao['method'],
-                        $novaRequisicao['uri'],
-                        [
-                            'headers' => $novaRequisicao['headers'],
-                            'body' => $novaRequisicao['body'],
-                            'form_params' => $novaRequisicao['form_params'],
-                        ]
-                    );
-                    return response($response->getBody()->getContents(), $response->getStatusCode());
-                }
-            } catch (\Throwable $exception) {
-                dd($exception);
-            }
+            $response = $client->request(
+                $novaRequisicao['method'],
+                $novaRequisicao['uri'],
+                [
+                    'headers' => $novaRequisicao['headers'],
+                    'body' => $novaRequisicao['body'],
+                    'form_params' => $novaRequisicao['form_params'],
+                ]
+            );
+            return response()->json([$response->getBody()->getContents()], $response->getStatusCode());
+        } catch (\Throwable $exception) {
+            return response()->json(["message" => $exception->getMessage()], $exception->getCode());
         }
-    }
-
-    public function sites()
-    {
-        return [
-            "localhost" => "localhost:8001",
-            "leoapg" => "https://leoapg.com"
-        ];
     }
 }
