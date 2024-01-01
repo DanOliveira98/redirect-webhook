@@ -5,7 +5,9 @@ namespace GamesPackage\Services;
 
 use GamesPackage\Contracts\CassinoInterface;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Str;
+
 class Pg implements CassinoInterface
 {
     public $op = "";
@@ -29,9 +31,10 @@ class Pg implements CassinoInterface
                 "btt" => 1,
             ]);
 
+            $url = rtrim($this->url, "/");
 
             $response = $client->post(
-                "https://api.pg-bo.me/external-game-launcher/api/v1/GetLaunchURLHTML?trace_id={$trace}",
+                "{$url}/external-game-launcher/api/v1/GetLaunchURLHTML?trace_id={$trace}",
                 [
                     "form_params" => [
                         "operator_token" => $this->op,
@@ -44,7 +47,7 @@ class Pg implements CassinoInterface
             );
             return $response->getBody();
         } catch (\GuzzleHttp\Exception\ClientException $exception) {
-            echo "erro ao abrir jogo";
+            Log::debug($exception->getMessage());
         }
     }
 }
