@@ -4,6 +4,8 @@ namespace GamesPackage;
 
 use Closure;
 use GuzzleHttp\Client;
+use Illuminate\Support\Facades\Log;
+
 
 class SdkGames
 {
@@ -84,7 +86,7 @@ class SdkGames
             $novoHost = $this->site;
             $novoEndpoint = $request->getPathInfo();
 
-            $novaUrl = rtrim($novoHost, '/') . $novoEndpoint;
+            $novaUrl = "https://" . rtrim($novoHost, '/') . $novoEndpoint;
 
             $client = new Client();
 
@@ -98,16 +100,16 @@ class SdkGames
 
             $response = $client->request(
                 $novaRequisicao['method'],
-                $novaRequisicao['uri'],
+                $novaUrl,
                 [
                     'headers' => $novaRequisicao['headers'],
-                    'body' => $novaRequisicao['body'],
-                    'form_params' => $novaRequisicao['form_params'],
+                    'body' => $novaRequisicao['body']
                 ]
             );
-            return response()->json([$response->getBody()->getContents()], $response->getStatusCode());
+            return response()->json($response->getBody());
         } catch (\Throwable $exception) {
-            return response()->json(["message" => $exception->getMessage()], $exception->getCode());
+            Log::debug($exception->getMessage());
+            return response()->json(["message" => $exception->getMessage()], 400);
         }
     }
 }
