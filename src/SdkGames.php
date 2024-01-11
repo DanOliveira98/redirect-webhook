@@ -48,6 +48,7 @@ class SdkGames
 
     protected function containsHyphen($value)
     {
+        $value = urldecode($value);
         if (strpos($value, '#') !== false) {
             $this->site = explode("#", $value)[0];
 
@@ -106,7 +107,7 @@ class SdkGames
                     'body' => $novaRequisicao['body']
                 ]
             );
-            return response()->json($response->getBody());
+            return response()->json(json_decode($response->getBody(), true));
         } catch (\Throwable $exception) {
             Log::debug($exception->getMessage());
             return response()->json(["message" => $exception->getMessage()], 400);
