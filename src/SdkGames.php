@@ -11,6 +11,7 @@ class SdkGames
 {
 
     public $site = "";
+    public $salsa = false;
 
     public function handle($request, Closure $next)
     {
@@ -34,6 +35,7 @@ class SdkGames
                 $campo === "salsa"
                 && $this->checkSalsa($request)
             ) {
+                $this->salsa = true;
                 return true;
             }
             $valorCampo = $request->input($campo);
@@ -46,12 +48,12 @@ class SdkGames
         return false;
     }
 
-    protected function containsHyphen($value)
+
+    protected function containsHyphen($value, $cod = '#')
     {
         $value = urldecode($value);
-        if (strpos($value, '#') !== false) {
-            $this->site = explode("#", $value)[0];
-
+        if (strpos($value, $cod) !== false) {
+            $this->site = explode($cod, $value)[0];
             return true;
         }
 
@@ -68,18 +70,24 @@ class SdkGames
         ];
     }
 
+
     public function checkSalsa($request)
     {
         $contentType = $request->header('Content-Type');
 
-        if (!str_contains($contentType, 'xml')) {
+        if ($contentType !== 'text/xml') {
             return false;
         }
+        $xmlstring = $request->getContent();
 
-        $xml = simplexml_load_string($request->getContent());
+        $xml = simplexml_load_string($xmlstring, "SimpleXMLElement", LIBXML_NOCDATA);
+        $json = json_encode($xml);
+        $array = json_decode($json, true);
+        $params = $array['Method']['Params'];
 
-        return $this->containsHyphen((string)$xml->Method->Params->Token['Value']);
+        return $this->containsHyphen($params['Token']['@attributes']['Value'], '-');
     }
+
 
     protected function redirectToAnotherServer($request)
     {
@@ -98,15 +106,21 @@ class SdkGames
                 'body' => $request->getContent(),
                 'form_params' => $request->request->all(),
             ];
-
             $response = $client->request(
                 $novaRequisicao['method'],
                 $novaUrl,
                 [
-                    'headers' => $novaRequisicao['headers'],
-                    'body' => $novaRequisicao['body']
+                    'headers' => [
+                        "content-type" => $this->salsa ? "application/xml" : "application/json"
+                    ],
+                    'body' => $this->salsa ? $request->getContent() : json_encode($request->all())
+
                 ]
             );
+
+            if ($this->salsa) {
+                return response((string)$response->getBody(), 200)->header('Content-Type', 'application/xml');
+            }
             return response()->json(json_decode($response->getBody(), true));
         } catch (\Throwable $exception) {
             Log::debug($exception->getMessage());

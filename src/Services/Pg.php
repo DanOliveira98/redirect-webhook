@@ -45,7 +45,7 @@ class Pg implements CassinoInterface
                     ]
                 ]
             );
-            return $response->getBody();
+            return response()->json(["body" => $response->getBody()->getContents()]);
         } catch (\GuzzleHttp\Exception\ClientException $exception) {
             Log::debug($exception->getResponse()->getBody());
         }
