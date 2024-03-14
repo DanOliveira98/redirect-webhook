@@ -17,7 +17,7 @@ class Salsa
 
     public function play(Request $request)
     {
-        $userId = $request->key . "#" . $request->userId;
+        $userId = $request->userId;
 
         return [
             "url" => "$this->url/game?token={$userId}&pn={$this->pn}&lang=pt&game={$request->game}"
