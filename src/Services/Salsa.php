@@ -20,7 +20,7 @@ class Salsa
         $userId = $request->userId;
 
         return [
-            "url" => "$this->url/game?token={$userId}&pn={$this->pn}&type=CHARGED&currency=BRL&lang=BR&game={$request->game}"
+            "url" => "$this->url/game?token={$userId}&pn={$this->pn}&type=CHARGED&currency=BRL&lang=pt&game={$request->game}"
         ];
     }
 }
