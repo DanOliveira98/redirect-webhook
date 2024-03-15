@@ -95,7 +95,7 @@ class SdkGames
             $novoHost = $this->site;
             $novoEndpoint = $request->getPathInfo();
             if ($this->salsa){
-                $novoEndpoint = "api/salsa";
+                $novoEndpoint = "/api/salsa";
             }
             $novaUrl = "https://" . rtrim($novoHost, '/') . $novoEndpoint;
 
