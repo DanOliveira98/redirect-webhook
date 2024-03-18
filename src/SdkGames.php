@@ -16,10 +16,14 @@ class SdkGames
     public function handle($request, Closure $next)
     {
         $response = $next($request);
+        $host = $request->getHost();
         if (
             $request->skip !== true
             && $this->shouldRedirect($request)
         ) {
+            if ($host === $this->site){
+                return $response;
+            }
             return $this->redirectToAnotherServer($request);
         }
 
