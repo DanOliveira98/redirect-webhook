@@ -22,7 +22,7 @@ class Pragmatic implements CassinoInterface
             "currency" => "BRL",
             "platform" => "WEB",
             "technology" => "H5",
-            "token" => $request->key . "#" . $request->userId,
+            "token" => $request->key . "#" . $request->userId . "#" . now()->timestamp,
             "stylename" => $secure,
             "cashierUrl" => $domain,
             "lobbyUrl" => $domain,
