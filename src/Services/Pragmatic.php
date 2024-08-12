@@ -23,6 +23,7 @@ class Pragmatic implements CassinoInterface
             "platform" => "WEB",
             "technology" => "H5",
             "token" => $request->key . "#" . $request->userId . "#" . now()->timestamp,
+            "userId" => $request->key . "#" . $request->userId,
             "stylename" => $secure,
             "cashierUrl" => $domain,
             "lobbyUrl" => $domain,
