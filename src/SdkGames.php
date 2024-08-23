@@ -59,9 +59,20 @@ class SdkGames
             return false;
         }
 
-        $value = urldecode($value);
-        if (strpos($value, $cod) !== false) {
-            $this->site = explode($cod, $value)[0];
+        $field = $value;
+
+        if (is_array($value) && !isset($value["user_id"])) {
+            return false;
+        }
+
+        if (is_array($value) && isset($value["user_id"])) {
+            $field = $value["user_id"];
+        }
+
+        $field = urldecode($field);
+
+        if (strpos($field, $cod) !== false) {
+            $this->site = explode($cod, $field)[0];
             return true;
         }
 
