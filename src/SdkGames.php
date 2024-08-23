@@ -21,7 +21,7 @@ class SdkGames
             $request->skip !== true
             && $this->shouldRedirect($request)
         ) {
-            if ($host === $this->site){
+            if ($host === $this->site) {
                 return $response;
             }
             return $this->redirectToAnotherServer($request);
@@ -55,6 +55,10 @@ class SdkGames
 
     protected function containsHyphen($value, $cod = '#')
     {
+        if ($value === null) {
+            return false;
+        }
+
         $value = urldecode($value);
         if (strpos($value, $cod) !== false) {
             $this->site = explode($cod, $value)[0];
@@ -98,7 +102,7 @@ class SdkGames
         try {
             $novoHost = $this->site;
             $novoEndpoint = $request->getPathInfo();
-            if ($this->salsa){
+            if ($this->salsa) {
                 $novoEndpoint = "/api/salsa";
             }
             $novaUrl = "https://" . rtrim($novoHost, '/') . $novoEndpoint;
